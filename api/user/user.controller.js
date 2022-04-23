@@ -24,7 +24,6 @@ async function getUserById(req, res) {
 
 async function createUser(req, res) {
     const data = req.body;
-    console.log(data);
     try {
         const userSaved = await User.create(data);
         return res.status(200).json(userSaved)

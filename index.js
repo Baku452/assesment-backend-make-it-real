@@ -1,19 +1,11 @@
 require('dotenv').config();
-
-const express = require('express')
-const connectDB = require('./config/database')
-
-const expressConfig = require('./config/express')
-const routes = require('./routes')
-const app = express()
-
+const { connectDB } = require('./config/database')
 const PORT =  process.env.PORT || 3001
+const app = require('./app')
 
-app.listen(PORT, async () => {
-
+const server = app.listen(PORT, async () => {
   await connectDB(); 
-  await expressConfig(app);
-  await routes(app);
-
   console.log('Server is running with express in port: ', PORT)
 })
+
+module.exports = server

@@ -5,7 +5,7 @@ const router = Router()
 
 //CRUD
 //GET
-router.get('/', isAuthenticated, getAllItems)
+router.get('/', getAllItems)
 router.get('/:id', isAuthenticated, retrieveItem)
 //Post
 router.post('/', isAuthenticated, createItem)

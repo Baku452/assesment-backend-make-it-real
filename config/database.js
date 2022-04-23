@@ -2,16 +2,28 @@ require("dotenv").config()
 
 const mongoose = require("mongoose")
 
-const URI = process.env.MONGO_URI
+let connection;
+
+const URI = process.env.NODE_ENV === 'test' ?  process.env.MONGO_URI_TEST : process.env.MONGO_URI
 
 async function connectDB() {
- try {
-  await mongoose.connect(URI)
-  console.log("MongoDB is connected")
- } catch (err) {
-  console.error('MongoDB is not conected ',err)
-  process.exit(1)
- }
+    if (connection) return;
+    connection = mongoose.connection;
+    await mongoose.connect(URI)
+}
+async function disconnect() {
+  if (!connection) return;
+  await mongoose.disconnect();
 }
 
-module.exports = connectDB
+async function cleanup() {
+  for (const collection in connection.collections) {
+    await connection.collections[collection].deleteMany({});
+  }
+}
+
+module.exports =  { 
+  connectDB,
+  disconnect,
+  cleanup,
+}
